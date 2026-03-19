@@ -4,6 +4,16 @@ A volume booster extension for Firefox and Zen Browser. Slider goes from 100% to
 
 ---
 
+## Installing using .xpi (This extension has been submitted for review on the firefox extensions store. Once verified, it can be downloaded directly from there.)
+
+1. Download as a ZIP
+2. Rename it to .xpi
+3. Go to about:config
+4. Set xpinstall.signatures.required to FALSE using the toggle.
+5. Drag the extension into the browser
+
+---
+
 ## Why does this exist?
 
 The volume booster I was using turned out to be malware.
@@ -19,21 +29,11 @@ So I wrote this instead. It's about 150 lines of code across 4 files.
 - Slider from 100% to 600%
 - Toggle to enable/disable without touching the slider
 - Volume setting persists across reloads (saved to local storage)
-- Works on dynamically loaded media — YouTube, Twitch, SoundCloud, etc. — via a MutationObserver watching for `<audio>` and `<video>` elements
+- Works on dynamically loaded media:- YouTube, Twitch, SoundCloud, etc. — via a MutationObserver watching for `<audio>` and `<video>` elements
 - Dark UI, nothing weird going on in the background
 
 ---
 
-## How it works
-
-Uses the Web Audio API. The content script (`content.js`) intercepts `<audio>` and `<video>` elements on a page and routes them through a `GainNode`, which lets you push volume past the browser's usual 100% cap. The popup just sends a message to the content script with the new slider value whenever you change it.
-
-Files:
-- `content.js` — injected into every page, handles the actual audio graph
-- `popup.html` / `popup.js` — the UI
-- `manifest.json` — permissions
-
----
 
 ## Permissions
 
@@ -56,21 +56,12 @@ Nothing is collected, sent anywhere, or logged. Everything runs locally.
 
 ---
 
-## Installing (dev mode)
 
-1. Go to `about:debugging#/runtime/this-firefox` in Firefox or Zen
-2. Click "Load Temporary Add-on..."
-3. Select `manifest.json` from this folder
-4. Done — icon appears in the toolbar
-
----
 
 ## Planned
 
 - Migrate to Manifest V3
 - Add `DynamicsCompressorNode` for clipping prevention
-- Reduce host permission scope (inject on demand instead of all pages)
-- Per-tab volume state
 
 ---
 
