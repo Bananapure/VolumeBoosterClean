@@ -26,11 +26,12 @@ So I wrote this instead. It's about 150 lines of code across 4 files.
 
 ## Features
 
-- Slider from 100% to 600%
+- Slider from 100% to 1000%
 - Toggle to enable/disable without touching the slider
 - Volume setting persists across reloads (saved to local storage)
 - Works on dynamically loaded media:- YouTube, Twitch, SoundCloud, etc. - via a MutationObserver watching for `<audio>` and `<video>` elements
-- `DynamicsCompressorNode` in the audio chain — prevents clipping/distortion at high boost values
+- `DynamicsCompressorNode` in the audio chain — acts as a transparent brick-wall limiter, prevents hard clipping at high boost values without reducing perceived loudness
+- **Adaptive clip point indicator** — a red dot on the slider shows the exact gain percentage at which the currently playing media would start clipping. Updates live as content loudness changes. Status text below the slider reads _"volume under clip point"_ or _"volume pushed above clip point"_ accordingly
 - Dark UI, nothing weird going on in the background
 - Manifest V3
 

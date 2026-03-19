@@ -86,8 +86,9 @@
 
     /* Slider */
     .slider-wrap {
-      position: relative;
-      padding: 4px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     .slider-labels {
@@ -96,7 +97,12 @@
       font-family: 'DM Mono', monospace;
       font-size: 10px;
       color: var(--muted);
-      margin-bottom: 8px;
+    }
+
+    /* Track container — positions the clip dot relative to the input */
+    .slider-track-container {
+      position: relative;
+      padding: 4px 0;
     }
 
     input[type=range] {
@@ -109,6 +115,7 @@
       outline: none;
       cursor: pointer;
       transition: opacity 0.3s;
+      display: block;
     }
 
     input[type=range]:disabled {
@@ -143,19 +150,53 @@
       cursor: pointer;
     }
 
-    /* Fill track via JS-updated custom property */
+    /* Fill track */
     input[type=range] {
       background: linear-gradient(
         to right,
         var(--accent) 0%,
-        var(--accent) var(--fill, 9%),
-        var(--border) var(--fill, 9%),
+        var(--accent) var(--fill, 0%),
+        var(--border) var(--fill, 0%),
         var(--border) 100%
       );
     }
 
     input[type=range]:disabled {
       background: var(--border) !important;
+    }
+
+    /* Clip point dot — absolutely positioned over the slider track */
+    .clip-dot {
+      display: none; /* shown via JS when clip point is known */
+      position: absolute;
+      top: 50%;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--off-accent);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 0 1px var(--off-accent), 0 0 8px rgba(255, 71, 87, 0.5);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      transition: left 0.3s ease;
+      z-index: 2;
+    }
+
+    /* Clip status text */
+    .clip-status {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      min-height: 13px;
+      transition: color 0.25s;
+    }
+
+    .clip-status.under {
+      color: var(--muted);
+    }
+
+    .clip-status.over {
+      color: var(--off-accent);
     }
 
     /* Toggle Button */
@@ -228,9 +269,13 @@
     <div class="slider-wrap">
       <div class="slider-labels">
         <span>100%</span>
-        <span>600%</span>
+        <span>1000%</span>
       </div>
-      <input type="range" id="slider" min="100" max="600" step="5" value="150" disabled />
+      <div class="slider-track-container">
+        <input type="range" id="slider" min="100" max="1000" step="5" value="150" disabled />
+        <div class="clip-dot" id="clipDot"></div>
+      </div>
+      <div class="clip-status" id="clipStatus"></div>
     </div>
 
     <button class="toggle-btn" id="toggleBtn">
