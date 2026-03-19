@@ -1,4 +1,4 @@
-# Volume Boost — Firefox / Zen Browser extension
+# Volume Boost - Firefox / Zen Browser extension
 
 A volume booster extension for Firefox and Zen Browser. Slider goes from 100% to 600%. One toggle to turn it on or off. That's it.
 
@@ -18,7 +18,7 @@ A volume booster extension for Firefox and Zen Browser. Slider goes from 100% to
 
 The volume booster I was using turned out to be malware.
 
-It was silently rewriting affiliate links in my browser — redirecting commission revenue to the extension author without me knowing. When I went looking for a replacement, everything else I tried had one of a few problems: too many permissions, broken on YouTube/Twitch, last updated in 2019, or just weirdly slow and ad-infested.
+It was silently rewriting affiliate links in my browser:- redirecting commission revenue to the extension author without me knowing. When I went looking for a replacement, everything else I tried had one of a few problems: too many permissions, broken on YouTube/Twitch, last updated in 2019, or just weirdly slow and ad-infested.
 
 So I wrote this instead. It's about 150 lines of code across 4 files.
 
@@ -29,7 +29,7 @@ So I wrote this instead. It's about 150 lines of code across 4 files.
 - Slider from 100% to 600%
 - Toggle to enable/disable without touching the slider
 - Volume setting persists across reloads (saved to local storage)
-- Works on dynamically loaded media:- YouTube, Twitch, SoundCloud, etc. — via a MutationObserver watching for `<audio>` and `<video>` elements
+- Works on dynamically loaded media:- YouTube, Twitch, SoundCloud, etc. - via a MutationObserver watching for `<audio>` and `<video>` elements
 - Dark UI, nothing weird going on in the background
 
 ---
@@ -50,9 +50,9 @@ Nothing is collected, sent anywhere, or logged. Everything runs locally.
 
 ## Known limitations
 
-**DRM content (Prime Video, Netflix, Spotify Web)** — these platforms use Encrypted Media Extensions, which the browser deliberately blocks from being routed through the Web Audio API. The boost won't apply. Audio may cut out entirely. This isn't fixable without a fundamentally different approach (`tabCapture`), which would make the extension significantly more complex.
+**DRM content (Prime Video, Netflix, Spotify Web)** - these platforms use Encrypted Media Extensions, which the browser deliberately blocks from being routed through the Web Audio API. The boost won't apply. Audio may cut out entirely. This isn't fixable without a fundamentally different approach (`tabCapture`), which would make the extension significantly more complex.
 
-**Clipping at high boost** — pushing to 500–600% on already-loud content will distort. It's a raw gain amplifier, not a compressor. A `DynamicsCompressorNode` would fix this and is on the to-do list.
+**Clipping at high boost** - pushing to 500–600% on already-loud content will distort. It's a raw gain amplifier, not a compressor. A `DynamicsCompressorNode` would fix this and is on the to-do list.
 
 ---
 
