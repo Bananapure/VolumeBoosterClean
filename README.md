@@ -30,7 +30,9 @@ So I wrote this instead. It's about 150 lines of code across 4 files.
 - Toggle to enable/disable without touching the slider
 - Volume setting persists across reloads (saved to local storage)
 - Works on dynamically loaded media:- YouTube, Twitch, SoundCloud, etc. - via a MutationObserver watching for `<audio>` and `<video>` elements
+- `DynamicsCompressorNode` in the audio chain — prevents clipping/distortion at high boost values
 - Dark UI, nothing weird going on in the background
+- Manifest V3
 
 ---
 
@@ -41,7 +43,8 @@ So I wrote this instead. It's about 150 lines of code across 4 files.
 |---|---|
 | `activeTab` | Send message to the active tab when you change the slider |
 | `storage` | Remember your volume setting between sessions |
-| `tabs` | Fallback: inject the content script manually if it didn't auto-load |
+| `tabs` | Query the currently active tab |
+| `scripting` | Inject content script into a tab if it didn't auto-load (MV3 replacement for `tabs.executeScript`) |
 | `<all_urls>` (host) | Auto-inject on every page so it's already running when you hit play |
 
 Nothing is collected, sent anywhere, or logged. Everything runs locally.
@@ -51,17 +54,6 @@ Nothing is collected, sent anywhere, or logged. Everything runs locally.
 ## Known limitations
 
 **DRM content (Prime Video, Netflix, Spotify Web)** - these platforms use Encrypted Media Extensions, which the browser deliberately blocks from being routed through the Web Audio API. The boost won't apply. Audio may cut out entirely. This isn't fixable without a fundamentally different approach (`tabCapture`), which would make the extension significantly more complex.
-
-**Clipping at high boost** - pushing to 500–600% on already-loud content will distort. It's a raw gain amplifier, not a compressor. A `DynamicsCompressorNode` would fix this and is on the to-do list.
-
----
-
-
-
-## Planned
-
-- Migrate to Manifest V3
-- Add `DynamicsCompressorNode` for clipping prevention
 
 ---
 

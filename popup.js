@@ -24,18 +24,17 @@ function updateUI() {
 function sendToTab() {
   browser.tabs.query({ active: true, currentWindow: true }).then(([tab]) => {
     if (!tab) return;
-    browser.tabs.sendMessage(tab.id, {
-      type: 'SET_BOOST',
-      enabled: isEnabled,
-      volume: volume
-    }).catch(() => {
-      // Content script not yet loaded on this tab — inject it
-      browser.tabs.executeScript(tab.id, { file: 'content.js' }).then(() => {
-        browser.tabs.sendMessage(tab.id, {
-          type: 'SET_BOOST',
-          enabled: isEnabled,
-          volume: volume
-        });
+
+    const msg = { type: 'SET_BOOST', enabled: isEnabled, volume };
+
+    browser.tabs.sendMessage(tab.id, msg).catch(() => {
+      // Content script not yet injected — use MV3 scripting API to inject it,
+      // then re-send the message once it's running.
+      browser.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['content.js']
+      }).then(() => {
+        browser.tabs.sendMessage(tab.id, msg).catch(() => {});
       }).catch(() => {});
     });
   });

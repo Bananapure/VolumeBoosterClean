@@ -1,14 +1,18 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Volume Boost",
-  "version": "1.0",
+  "version": "1.1",
   "description": "Boost audio volume up to 600% on any tab",
   "permissions": [
     "activeTab",
     "storage",
-    "tabs"
+    "tabs",
+    "scripting"
   ],
-  "browser_action": {
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
     "default_popup": "popup.html",
     "default_title": "Volume Boost"
   },
