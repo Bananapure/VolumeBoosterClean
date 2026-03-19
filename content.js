@@ -15,15 +15,16 @@ function getOrCreateAudioContext() {
 
     gainNode = audioCtx.createGain();
 
-    // DynamicsCompressorNode sits between the gain and the speakers.
-    // It transparently reins in peaks caused by high boost values so the
-    // output never hard-clips, while still letting the overall level feel loud.
+    // DynamicsCompressorNode configured as a transparent brick-wall limiter.
+    // It sits invisible at all normal boost levels and only engages when the
+    // signal is genuinely about to clip — so perceived loudness is unchanged
+    // at 100–500%, and hard distortion is prevented at 600%.
     compressorNode = audioCtx.createDynamicsCompressor();
-    compressorNode.threshold.value = -24;  // dB — start compressing here
-    compressorNode.knee.value       =  30;  // dB — soft-knee width
-    compressorNode.ratio.value      =  12;  // 12:1 — firm but not limiting
-    compressorNode.attack.value     = 0.003; // 3 ms — fast enough to catch transients
-    compressorNode.release.value    = 0.25;  // 250 ms
+    compressorNode.threshold.value = -3;    // dB — only kicks in near true clipping
+    compressorNode.knee.value       =  0;   // dB — hard knee, no soft transition
+    compressorNode.ratio.value      = 20;   // 20:1 — effectively a brick-wall limit
+    compressorNode.attack.value     = 0.001; // 1 ms — catch peaks before they clip
+    compressorNode.release.value    = 0.1;  // 100 ms
 
     gainNode.connect(compressorNode);
     compressorNode.connect(audioCtx.destination);
