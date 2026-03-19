@@ -1,8 +1,10 @@
 // Volume Boost - Content Script
 // Uses Web Audio API to boost volume beyond 100%
+// Includes a DynamicsCompressorNode to prevent clipping at high gain values.
 
 let audioCtx = null;
 let gainNode = null;
+let compressorNode = null;
 let connectedNodes = new Set();
 let isEnabled = false;
 let currentVolume = 100;
@@ -10,8 +12,22 @@ let currentVolume = 100;
 function getOrCreateAudioContext() {
   if (!audioCtx || audioCtx.state === 'closed') {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
     gainNode = audioCtx.createGain();
-    gainNode.connect(audioCtx.destination);
+
+    // DynamicsCompressorNode sits between the gain and the speakers.
+    // It transparently reins in peaks caused by high boost values so the
+    // output never hard-clips, while still letting the overall level feel loud.
+    compressorNode = audioCtx.createDynamicsCompressor();
+    compressorNode.threshold.value = -24;  // dB — start compressing here
+    compressorNode.knee.value       =  30;  // dB — soft-knee width
+    compressorNode.ratio.value      =  12;  // 12:1 — firm but not limiting
+    compressorNode.attack.value     = 0.003; // 3 ms — fast enough to catch transients
+    compressorNode.release.value    = 0.25;  // 250 ms
+
+    gainNode.connect(compressorNode);
+    compressorNode.connect(audioCtx.destination);
+
     connectedNodes = new Set();
   }
   return { audioCtx, gainNode };
